@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section>
+    <h2>Reader Dashboard</h2>
+    <p class="lead">Welcome back, <span sec:authentication="name">Reader</span>!</p>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Books Borrowed</h5>
+                    <h2 th:text="${borrowedBooksCount}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Due Soon</h5>
+                    <h2 th:text="${dueSoonCount}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Wishlist Items</h5>
+                    <h2 th:text="${wishlistCount}">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Currently Borrowed</h5>
+                </div>
+                <div class="card-body">
+                    <div th:each="loan : ${currentLoans}" class="mb-3 border-bottom pb-2">
+                        <h6 th:text="${loan.book.title}">Book Title</h6>
+                        <small class="text-muted">
+                            Due: <span th:text="${#temporals.format(loan.dueDate, 'MMM dd, yyyy')}">Date</span>
+                        </small>
+                        <div class="mt-1">
+                            <button class="btn btn-sm btn-primary">Renew</button>
+                            <button class="btn btn-sm btn-success">Return</button>
+                        </div>
+                    </div>
+                    <a href="/reader/borrowed" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recommended Books</h5>
+                </div>
+                <div class="card-body">
+                    <div th:each="book : ${recommendations}" class="mb-3 border-bottom pb-2">
+                        <h6 th:text="${book.title}">Book Title</h6>
+                        <small class="text-muted" th:text="${book.author.firstName + ' ' + book.author.lastName}">Author</small>
+                        <div class="mt-1">
+                            <a th:href="@{/books/{id}(id=${book.id})}" class="btn btn-sm btn-outline-primary">View</a>
+                            <button class="btn btn-sm btn-success">Borrow</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

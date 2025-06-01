@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>User Management</h2>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}">1</td>
+                        <td th:text="${user.username}">username</td>
+                        <td th:text="${user.email}">email@example.com</td>
+                        <td>
+                                <span class="badge"
+                                      th:classappend="${user.role == 'ADMIN'} ? 'bg-danger' :
+                                                     ${user.role == 'LIBRARIAN'} ? 'bg-warning' :
+                                                     ${user.role == 'PUBLISHER'} ? 'bg-info' : 'bg-secondary'"
+                                      th:text="${user.role}">ROLE</span>
+                        </td>
+                        <td>
+                                <span class="badge"
+                                      th:classappend="${user.active} ? 'bg-success' : 'bg-danger'"
+                                      th:text="${user.active} ? 'Active' : 'Inactive'">Status</span>
+                        </td>
+                        <td th:text="${#temporals.format(user.registrationDate, 'yyyy-MM-dd')}">Date</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary"
+                                        th:onclick="'editUser(' + ${user.id} + ')'">Edit</button>
+                                <button class="btn btn-outline-warning"
+                                        th:onclick="'changeRole(' + ${user.id} + ')'">Change Role</button>
+                                <button class="btn btn-outline-danger"
+                                        th:onclick="'toggleUser(' + ${user.id} + ')'">
+                                    <span th:text="${user.active} ? 'Deactivate' : 'Activate'">Action</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Role Change Modal -->
+<div class="modal fade" id="roleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change User Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="roleForm" method="post">
+                <div class="modal-body">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" id="userId" name="userId">
+                    <div class="mb-3">
+                        <label for="newRole" class="form-label">Select New Role:</label>
+                        <select class="form-select" id="newRole" name="newRole" required>
+                            <option value="READER">Reader</option>
+                            <option value="PUBLISHER">Publisher</option>
+                            <option value="LIBRARIAN">Librarian</option>
+                            <option value="ADMIN">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Change Role</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeRole(userId) {
+        document.getElementById('userId').value = userId;
+        document.getElementById('roleForm').action = '/admin/users/' + userId + '/role';
+        new bootstrap.Modal(document.getElementById('roleModal')).show();
+    }
+
+    function toggleUser(userId) {
+        if (confirm('Are you sure you want to change this user\'s status?')) {
+            window.location.href = '/admin/users/' + userId + '/toggle';
+        }
+    }
+</script>
+</body>
+</html>

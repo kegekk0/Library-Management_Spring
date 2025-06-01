@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section>
+    <h2>Administrator Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 th:text="${totalUsers}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Books</h5>
+                    <h2 th:text="${totalBooks}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Active Loans</h5>
+                    <h2 th:text="${activeLoans}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Publishers</h5>
+                    <h2 th:text="${totalPublishers}">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="/admin/users" class="btn btn-primary mb-2 d-block">Manage Users</a>
+                    <a href="/admin/roles" class="btn btn-secondary mb-2 d-block">Manage Roles</a>
+                    <a href="/books/add" class="btn btn-success mb-2 d-block">Add New Book</a>
+                    <a href="/admin/reports" class="btn btn-info d-block">View Reports</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Activities</h5>
+                </div>
+                <div class="card-body">
+                    <div th:each="activity : ${recentActivities}" class="mb-2">
+                        <small class="text-muted" th:text="${activity.timestamp}">timestamp</small>
+                        <p class="mb-1" th:text="${activity.description}">Activity description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

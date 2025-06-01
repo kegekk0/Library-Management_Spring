@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section>
+    <h2>Librarian Dashboard</h2>
+    <p class="lead">Manage the library system, <span sec:authentication="name">Librarian</span>!</p>
+
+    <div class="row mb-4">
+        <div class="col-md-2">
+            <div class="card text-white bg-primary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Books</h5>
+                    <h2 th:text="${totalBooks}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-success">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Available</h5>
+                    <h2 th:text="${availableBooks}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-warning">
+                <div class="card-body text-center">
+                    <h5 class="card-title">On Loan</h5>
+                    <h2 th:text="${booksOnLoan}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-danger">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Overdue</h5>
+                    <h2 th:text="${overdueBooks}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-info">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Reservations</h5>
+                    <h2 th:text="${reservations}">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-white bg-secondary">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Active Users</h5>
+                    <h2 th:text="${activeUsers}">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Loans</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th>Reader</th>
+                                <th>Book</th>
+                                <th>Loan Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="loan : ${recentLoans}">
+                                <td th:text="${loan.reader.firstName + ' ' + loan.reader.lastName}">Reader</td>
+                                <td th:text="${loan.book.title}">Book</td>
+                                <td th:text="${#temporals.format(loan.loanDate, 'MMM dd')}">Loan Date</td>
+                                <td th:text="${#temporals.format(loan.dueDate, 'MMM dd')}">Due Date</td>
+                                <td>
+                                        <span class="badge"
+                                              th:classappend="${loan.status == 'ACTIVE'} ? 'bg-success' :
+                                                             ${loan.status == 'OVERDUE'} ? 'bg-danger' : 'bg-secondary'"
+                                              th:text="${loan.status}">Status</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-success"
+                                            th:onclick="'returnBook(' + ${loan.id} + ')'">Return</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="/books/add" class="btn btn-primary btn-sm d-block mb-2">
+                        <i class="bi bi-plus-circle"></i> Add New Book
+                    </a>
+                    <a href="/librarian/loans" class="btn btn-success btn-sm d-block mb-2">
+                        <i class="bi bi-arrow-repeat"></i> Issue/Return Books
+                    </a>
+                    <a href="/librarian/overdue" class="btn btn-warning btn-sm d-block mb-2">
+                        <i class="bi bi-exclamation-triangle"></i> Manage Overdue
+                    </a>
+                    <a href="/librarian/reports" class="btn btn-info btn-sm d-block">
+                        <i class="bi bi-graph-up"></i> Generate Reports
+                    </a>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Overdue Books</h5>
+                </div>
+                <div class="card-body">
+                    <div th:each="overdue : ${overdueLoans}" class="mb-2 small">
+                        <strong th:text="${overdue.book.title}">Book</strong><br>
+                        <span class="text-muted" th:text="${overdue.reader.firstName + ' ' + overdue.reader.lastName}">Reader</span><br>
+                        <span class="text-danger">Due: <span th:text="${#temporals.format(overdue.dueDate, 'MMM dd')}">Date</span></span>
+                        <hr>
+                    </div>
+                    <a href="/librarian/overdue" class="btn btn-outline-danger btn-sm">View All</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function returnBook(loanId) {
+        if (confirm('Mark this book as returned?')) {
+            fetch('/librarian/loans/' + loanId + '/return', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                }
+            }).then(() => {
+                location.reload();
+            });
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,6 +1,9 @@
 package pl.edu.pja.tpo_12.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,12 +14,19 @@ public class Publisher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @Getter
     @Column(nullable = false)
     private String name;
 
+    @Getter
+    @Setter
     private String address;
+    @Setter
     private String country;
 
+    @Getter
+    @Setter
     @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
     private Set<Book> books = new HashSet<>();
 
@@ -26,41 +36,5 @@ public class Publisher {
         this.name = name;
         this.address = address;
         this.country = country;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
     }
 }

@@ -1,9 +1,13 @@
 package pl.edu.pja.tpo_12.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "Author")
 public class Author {
@@ -11,49 +15,22 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private String firstName;
 
+    @Setter
     @Column(nullable = false)
     private String lastName;
 
+    @Setter
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private Set<Book> books = new HashSet<>();
 
-    // Constructors
     public Author() {}
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
     }
 }

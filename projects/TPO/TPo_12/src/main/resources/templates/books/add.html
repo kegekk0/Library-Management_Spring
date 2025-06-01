@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section>
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <h2>Add New Book</h2>
+
+      <div th:if="${error}" class="alert alert-danger" role="alert">
+        <span th:text="${error}">Error message</span>
+      </div>
+
+      <form th:action="@{/books/add}" th:object="${book}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="row mb-3">
+          <div class="col-md-8">
+            <label for="title" class="form-label">Title *</label>
+            <input type="text" class="form-control" id="title" th:field="*{title}" required>
+          </div>
+          <div class="col-md-4">
+            <label for="isbn" class="form-label">ISBN *</label>
+            <input type="text" class="form-control" id="isbn" th:field="*{isbn}" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="subtitle" class="form-label">Subtitle</label>
+          <input type="text" class="form-control" id="subtitle" th:field="*{subtitle}">
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="authorId" class="form-label">Author *</label>
+            <select class="form-select" id="authorId" th:field="*{author.id}" required>
+              <option value="">Select Author</option>
+              <option th:each="author : ${authors}"
+                      th:value="${author.id}"
+                      th:text="${author.firstName + ' ' + author.lastName}">Author</option>
+            </select>
+            <small class="form-text text-muted">
+              <a href="#" data-bs-toggle="modal" data-bs-target="#addAuthorModal">Add new author</a>
+            </small>
+          </div>
+          <div class="col-md-6">
+            <label for="publisherId" class="form-label">Publisher *</label>
+            <select class="form-select" id="publisherId" th:field="*{publisher.id}" required>
+              <option value="">Select Publisher</option>
+              <option th:each="publisher : ${publishers}"
+                      th:value="${publisher.id}"
+                      th:text="${publisher.publisherName}">Publisher</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="publicationYear" class="form-label">Publication Year *</label>
+            <input type="number" class="form-control" id="publicationYear"
+                   th:field="*{publicationYear}" min="1000" max="2024" required>
+          </div>
+          <div class="col-md-4">
+            <label for="genre" class="form-label">Genre</label>
+            <select class="form-select" id="genre" th:field="*{genre}">
+              <option value="">Select Genre</option>
+              <option value="FICTION">Fiction</option>
+              <option value="NON_FICTION">Non-Fiction</option>
+              <option value="MYSTERY">Mystery</option>
+              <option value="ROMANCE">Romance</option>
+              <option value="SCIENCE_FICTION">Science Fiction</option>
+              <option value="FANTASY">Fantasy</option>
+              <option value="BIOGRAPHY">Biography</option>
+              <option value="HISTORY">History</option>
+              <option value="SCIENCE">Science</option>
+              <option value="TECHNOLOGY">Technology</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="language" class="form-label">Language</label>
+            <select class="form-select" id="language" th:field="*{language}">
+              <option value="ENGLISH">English</option>
+              <option value="POLISH">Polish</option>
+              <option value="GERMAN">German</option>
+              <option value="FRENCH">French</option>
+              <option value="# Complete Library Management System Templates
+
+## Project Structure

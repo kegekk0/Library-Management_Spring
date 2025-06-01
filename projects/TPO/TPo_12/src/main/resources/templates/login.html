@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section class="row">
+    <div class="col-md-6 mx-auto">
+        <h2 class="mb-4">Login</h2>
+
+        <div th:if="${error}" class="alert alert-danger" role="alert">
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Don't have an account?
+                <a href="/register/reader">Register as Reader</a> |
+                <a href="/register/publisher">Register as Publisher</a>
+            </p>
+        </div>
+    </div>
+</section>
+</body>
+</html>
