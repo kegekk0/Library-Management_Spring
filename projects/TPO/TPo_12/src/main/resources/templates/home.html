@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section}, ${pageTitle})}">
+<body>
+<section class="row">
+  <div class="col-md-8 mx-auto text-center">
+    <h1 class="display-4">Welcome to Our Library</h1>
+    <p class="lead">Browse our collection of books or register to access more features</p>
+
+    <div class="mt-5">
+      <a href="/books" class="btn btn-primary btn-lg me-3">Browse Books</a>
+      <div class="btn-group mt-2 mt-md-0">
+        <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-bs-toggle="dropdown">
+          Register
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/register/reader">As Reader</a></li>
+          <li><a class="dropdown-item" href="/register/publisher">As Publisher</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
